@@ -4,7 +4,7 @@ A vendor-agnostic AI gateway. Any app that needs LLM, vision, or image-generatio
 
 **Modalities**: text (chat) · vision (image → text) · image generation (text → image)
 
-**Providers**: OpenAI · Google Gemini · DeepSeek · Anthropic · Azure OpenAI · Groq · OpenRouter · Mistral · Cerebras · xAI · Cohere · Ollama (optional, disabled by default)
+**Providers**: OpenAI · Google Gemini · DeepSeek · Anthropic · Azure OpenAI · Groq · OpenRouter · Mistral · Cerebras · xAI · Cohere · Z AI · GitHub Models · NVIDIA NIM · OVHcloud AI Endpoints · LLM7 · SiliconFlow · Ollama (optional, disabled by default)
 
 **Stack**: Kotlin 2.3 · Quarkus 3.32 · Java 25 · LangChain4j 1.7 · SmallRye JWT / Fault Tolerance / Health / OpenAPI · Micrometer + Prometheus · OpenTelemetry (OTLP) · Redis (optional, for shared rate-limit state)
 
@@ -189,6 +189,12 @@ These providers can also be configured per-request via the `api_key` field. Serv
 | `CEREBRAS_API_KEY` | Cerebras API key |
 | `XAI_API_KEY` | xAI API key |
 | `COHERE_API_KEY` | Cohere API key |
+| `ZAI_API_KEY` | Z AI (Zhipu) API key |
+| `GITHUB_MODELS_API_KEY` | GitHub Models API key |
+| `NVIDIA_NIM_API_KEY` | NVIDIA NIM API key |
+| `OVHCLOUD_AI_ENDPOINTS_API_KEY` | OVHcloud AI Endpoints API key |
+| `LLM7_API_KEY` | LLM7 API key |
+| `SILICONFLOW_API_KEY` | SiliconFlow API key |
 
 ### Model Overrides (optional)
 
@@ -597,7 +603,7 @@ Cached for 1 minute (`Cache-Control: public, max-age=60`).
 
 | Provider | API used |
 |----------|----------|
-| `openai`, `deepseek`, `groq`, `openrouter`, `mistral`, `cerebras`, `xai`, `cohere` | OpenAI-compatible `GET /v1/models` |
+| `openai`, `deepseek`, `groq`, `openrouter`, `mistral`, `cerebras`, `xai`, `cohere`, `zai`, `github_models`, `nvidia_nim`, `ovhcloud_ai_endpoints`, `llm7`, `siliconflow` | OpenAI-compatible `GET /v1/models` |
 | `anthropic` | `GET /v1/models` with `x-api-key` header |
 | `gemini` | `GET /v1beta/models?key=...` |
 | `azure_openai` | Not supported (model availability depends on deployment) |
@@ -1150,6 +1156,12 @@ The template machinery is still fully supported — it's just unopinionated abou
 | `cerebras` | No | Yes | Text-only; fastest inference |
 | `xai` | No | Yes | Grok models; text-only |
 | `cohere` | No | Yes | Command models; text-only |
+| `zai` | Yes | Yes | Zhipu GLM models via OpenAI-compatible API |
+| `github_models` | Yes | Yes | GitHub Models endpoint via OpenAI-compatible API |
+| `nvidia_nim` | Yes | Yes | NVIDIA NIM endpoint via OpenAI-compatible API |
+| `ovhcloud_ai_endpoints` | Yes | Yes | OVHcloud AI Endpoints via OpenAI-compatible API |
+| `llm7` | Yes | Yes | LLM7 gateway endpoint via OpenAI-compatible API |
+| `siliconflow` | Yes | Yes | SiliconFlow endpoint via OpenAI-compatible API |
 | `ollama` | Yes (llava) | Yes | Local or cloud; free; uses OpenAI-compatible API |
 | `openai_compatible` | Yes | Yes | Any OpenAI-compatible endpoint; requires `base_url` in `model_params` |
 

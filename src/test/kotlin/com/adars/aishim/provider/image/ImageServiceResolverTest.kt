@@ -30,6 +30,9 @@ class ImageServiceResolverTest {
             AiProvider.DEEPSEEK, AiProvider.ANTHROPIC, AiProvider.AZURE_OPENAI,
             AiProvider.GROQ, AiProvider.OPENROUTER, AiProvider.MISTRAL,
             AiProvider.CEREBRAS, AiProvider.XAI, AiProvider.COHERE,
+            AiProvider.ZAI, AiProvider.GITHUB_MODELS,
+            AiProvider.NVIDIA_NIM, AiProvider.OVHCLOUD_AI_ENDPOINTS,
+            AiProvider.LLM7, AiProvider.SILICONFLOW,
             AiProvider.OLLAMA, AiProvider.OPENAI_COMPATIBLE,
         )
         textOnly.forEach { p ->

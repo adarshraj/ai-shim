@@ -23,6 +23,12 @@ enum class AiProvider(
     CEREBRAS(supportsText = true, supportsVision = false),                                   // text-only (fastest inference)
     XAI(supportsText = true, supportsVision = false),                                        // xAI Grok models (OpenAI-compatible)
     COHERE(supportsText = true, supportsVision = false),                                     // Cohere Command models (OpenAI-compatible)
+    ZAI(supportsText = true, supportsVision = true),                                         // Zhipu GLM models (OpenAI-compatible)
+    GITHUB_MODELS(supportsText = true, supportsVision = true),                               // GitHub Models inference endpoint (OpenAI-compatible)
+    NVIDIA_NIM(supportsText = true, supportsVision = true),                                  // NVIDIA NIM endpoint (OpenAI-compatible)
+    OVHCLOUD_AI_ENDPOINTS(supportsText = true, supportsVision = true),                       // OVHcloud AI Endpoints (OpenAI-compatible)
+    LLM7(supportsText = true, supportsVision = true),                                        // LLM7 gateway endpoint (OpenAI-compatible)
+    SILICONFLOW(supportsText = true, supportsVision = true),                                 // SiliconFlow endpoint (OpenAI-compatible)
     /** Any OpenAI-compatible endpoint — caller must supply base_url in model_params. */
     OPENAI_COMPATIBLE(supportsText = true, supportsVision = true);
 

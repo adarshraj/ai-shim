@@ -155,6 +155,54 @@ class ProviderResolverTest {
     }
 
     @Test
+    fun `text ZAI routes through openAiText with ZAI base URL`() {
+        resolver.textFunction(AiProvider.ZAI, null, "k")(listOf(UserMessage.from("hi")))
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiText).chat(any(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://open.bigmodel.cn/api/paas/v4")
+    }
+
+    @Test
+    fun `text GITHUB_MODELS routes through openAiText with GitHub Models base URL`() {
+        resolver.textFunction(AiProvider.GITHUB_MODELS, null, "k")(listOf(UserMessage.from("hi")))
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiText).chat(any(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://models.inference.ai.azure.com")
+    }
+
+    @Test
+    fun `text NVIDIA_NIM routes through openAiText with NVIDIA NIM base URL`() {
+        resolver.textFunction(AiProvider.NVIDIA_NIM, null, "k")(listOf(UserMessage.from("hi")))
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiText).chat(any(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://integrate.api.nvidia.com/v1")
+    }
+
+    @Test
+    fun `text OVHCLOUD_AI_ENDPOINTS routes through openAiText with OVHcloud AI Endpoints base URL`() {
+        resolver.textFunction(AiProvider.OVHCLOUD_AI_ENDPOINTS, null, "k")(listOf(UserMessage.from("hi")))
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiText).chat(any(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://oai.endpoints.kepler.ai.cloud.ovh.net/v1")
+    }
+
+    @Test
+    fun `text LLM7 routes through openAiText with LLM7 base URL`() {
+        resolver.textFunction(AiProvider.LLM7, null, "k")(listOf(UserMessage.from("hi")))
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiText).chat(any(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://api.llm7.io/v1")
+    }
+
+    @Test
+    fun `text SILICONFLOW routes through openAiText with SiliconFlow base URL`() {
+        resolver.textFunction(AiProvider.SILICONFLOW, null, "k")(listOf(UserMessage.from("hi")))
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiText).chat(any(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://api.siliconflow.cn/v1")
+    }
+
+    @Test
     fun `text OLLAMA injects ollama base URL and default api key`() {
         resolver.textFunction(AiProvider.OLLAMA, null, null)(listOf(UserMessage.from("hi")))
         val params = nullableArgumentCaptor<ModelParams>()
@@ -229,6 +277,54 @@ class ProviderResolverTest {
         val captor = nullableArgumentCaptor<ModelParams>()
         verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
         assertThat(captor.firstValue?.baseUrl).isEqualTo("https://api.groq.com/openai/v1")
+    }
+
+    @Test
+    fun `vision ZAI routes through openAiOcr with ZAI base URL`() {
+        resolver.visionFunction(AiProvider.ZAI, null, null, "k")("p", "b64", "image/png")
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://open.bigmodel.cn/api/paas/v4")
+    }
+
+    @Test
+    fun `vision GITHUB_MODELS routes through openAiOcr with GitHub Models base URL`() {
+        resolver.visionFunction(AiProvider.GITHUB_MODELS, null, null, "k")("p", "b64", "image/png")
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://models.inference.ai.azure.com")
+    }
+
+    @Test
+    fun `vision NVIDIA_NIM routes through openAiOcr with NVIDIA NIM base URL`() {
+        resolver.visionFunction(AiProvider.NVIDIA_NIM, null, null, "k")("p", "b64", "image/png")
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://integrate.api.nvidia.com/v1")
+    }
+
+    @Test
+    fun `vision OVHCLOUD_AI_ENDPOINTS routes through openAiOcr with OVHcloud AI Endpoints base URL`() {
+        resolver.visionFunction(AiProvider.OVHCLOUD_AI_ENDPOINTS, null, null, "k")("p", "b64", "image/png")
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://oai.endpoints.kepler.ai.cloud.ovh.net/v1")
+    }
+
+    @Test
+    fun `vision LLM7 routes through openAiOcr with LLM7 base URL`() {
+        resolver.visionFunction(AiProvider.LLM7, null, null, "k")("p", "b64", "image/png")
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://api.llm7.io/v1")
+    }
+
+    @Test
+    fun `vision SILICONFLOW routes through openAiOcr with SiliconFlow base URL`() {
+        resolver.visionFunction(AiProvider.SILICONFLOW, null, null, "k")("p", "b64", "image/png")
+        val captor = nullableArgumentCaptor<ModelParams>()
+        verify(openAiOcr).invokeVision(any(), any(), any(), anyOrNull(), captor.capture(), eq("k"))
+        assertThat(captor.firstValue?.baseUrl).isEqualTo("https://api.siliconflow.cn/v1")
     }
 
     @Test

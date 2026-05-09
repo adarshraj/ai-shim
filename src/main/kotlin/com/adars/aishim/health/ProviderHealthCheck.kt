@@ -1,5 +1,6 @@
 package com.adars.aishim.health
 
+import com.adars.aishim.provider.OpenAiCompatibleRegistry
 import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.health.HealthCheck
@@ -36,32 +37,28 @@ class ProviderHealthCheck @jakarta.inject.Inject constructor(
         val deepSeekEnabled = deepSeekKey != "DISABLED"
         val anthropicEnabled = anthropicKey != "DISABLED"
         val azureOpenAiEnabled = azureOpenAiKey != "DISABLED"
-        val groqEnabled = envKeyPresent("GROQ_API_KEY")
-        val openRouterEnabled = envKeyPresent("OPENROUTER_API_KEY")
-        val mistralEnabled = envKeyPresent("MISTRAL_API_KEY")
-        val cerebrasEnabled = envKeyPresent("CEREBRAS_API_KEY")
-        val xaiEnabled = envKeyPresent("XAI_API_KEY")
-        val cohereEnabled = envKeyPresent("COHERE_API_KEY")
+        val openAiCompatEnabled = OpenAiCompatibleRegistry.providers.mapValues { (_, meta) ->
+            envKeyPresent(meta.apiKeyEnvVar)
+        }
         // Ollama is always "available" — it's local; actual reachability is checked at call time
         val anyEnabled = openAiEnabled || geminiEnabled || deepSeekEnabled ||
             anthropicEnabled || azureOpenAiEnabled ||
-            groqEnabled || openRouterEnabled || mistralEnabled ||
-            cerebrasEnabled || xaiEnabled || cohereEnabled
+            openAiCompatEnabled.values.any { it }
 
-        return HealthCheckResponse.named("ai-providers")
+        val builder = HealthCheckResponse.named("ai-providers")
             .status(anyEnabled)
             .withData("openai", if (openAiEnabled) "enabled" else "disabled")
             .withData("gemini", if (geminiEnabled) "enabled" else "disabled")
             .withData("deepseek", if (deepSeekEnabled) "enabled" else "disabled")
             .withData("anthropic", if (anthropicEnabled) "enabled" else "disabled")
             .withData("azure-openai", if (azureOpenAiEnabled) "enabled" else "disabled")
-            .withData("groq", if (groqEnabled) "enabled" else "per-request only")
-            .withData("openrouter", if (openRouterEnabled) "enabled" else "per-request only")
-            .withData("mistral", if (mistralEnabled) "enabled" else "per-request only")
-            .withData("cerebras", if (cerebrasEnabled) "enabled" else "per-request only")
-            .withData("xai", if (xaiEnabled) "enabled" else "per-request only")
-            .withData("cohere", if (cohereEnabled) "enabled" else "per-request only")
-            .withData("ollama", "available (local/cloud)")
-            .build()
+
+        OpenAiCompatibleRegistry.providers.keys.forEach { provider ->
+            val key = provider.name.lowercase().replace('_', '-')
+            val enabled = openAiCompatEnabled[provider] == true
+            builder.withData(key, if (enabled) "enabled" else "per-request only")
+        }
+
+        return builder.withData("ollama", "available (local/cloud)").build()
     }
 }

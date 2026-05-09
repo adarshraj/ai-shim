@@ -248,6 +248,12 @@ class AiService @Inject constructor(
         ProviderInfo(id = "cerebras", supportsText = true, supportsVision = false, enabled = true),
         ProviderInfo(id = "xai", supportsText = true, supportsVision = false, enabled = true),
         ProviderInfo(id = "cohere", supportsText = true, supportsVision = false, enabled = true),
+        ProviderInfo(id = "zai", supportsText = true, supportsVision = true, enabled = true),
+        ProviderInfo(id = "github_models", supportsText = true, supportsVision = true, enabled = true),
+        ProviderInfo(id = "nvidia_nim", supportsText = true, supportsVision = true, enabled = true),
+        ProviderInfo(id = "ovhcloud_ai_endpoints", supportsText = true, supportsVision = true, enabled = true),
+        ProviderInfo(id = "llm7", supportsText = true, supportsVision = true, enabled = true),
+        ProviderInfo(id = "siliconflow", supportsText = true, supportsVision = true, enabled = true),
         ProviderInfo(id = "ollama", supportsText = true, supportsVision = true, enabled = true),
     )
 

@@ -86,10 +86,13 @@ class ModelListServiceTest {
 
     @Test
     fun `free-tier providers without env key and without request key are rejected`() {
-        // GROQ/OPENROUTER/MISTRAL/CEREBRAS/XAI/COHERE all have no server-side key by default.
+        // GROQ/OPENROUTER/MISTRAL/CEREBRAS/XAI/COHERE/ZAI/GITHUB_MODELS/NVIDIA_NIM/OVHCLOUD_AI_ENDPOINTS/LLM7/SILICONFLOW all have no server-side key by default.
         val freeTier = listOf(
             AiProvider.GROQ, AiProvider.OPENROUTER, AiProvider.MISTRAL,
             AiProvider.CEREBRAS, AiProvider.XAI, AiProvider.COHERE,
+            AiProvider.ZAI, AiProvider.GITHUB_MODELS,
+            AiProvider.NVIDIA_NIM, AiProvider.OVHCLOUD_AI_ENDPOINTS,
+            AiProvider.LLM7, AiProvider.SILICONFLOW,
         )
         freeTier.forEach { p ->
             // Cannot guarantee env vars are unset in CI, so just assert *some* exception type is reasonable

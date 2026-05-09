@@ -23,7 +23,10 @@ class ProviderHealthCheckUnitTest {
 
     private fun hostEnvHasAnyLlmKey(): Boolean =
         listOf("GROQ_API_KEY", "OPENROUTER_API_KEY", "MISTRAL_API_KEY",
-               "CEREBRAS_API_KEY", "XAI_API_KEY", "COHERE_API_KEY")
+               "CEREBRAS_API_KEY", "XAI_API_KEY", "COHERE_API_KEY",
+               "ZAI_API_KEY", "GITHUB_MODELS_API_KEY",
+               "NVIDIA_NIM_API_KEY", "OVHCLOUD_AI_ENDPOINTS_API_KEY",
+               "LLM7_API_KEY", "SILICONFLOW_API_KEY")
             .any { !System.getenv(it).isNullOrBlank() }
 
     @Test
@@ -98,6 +101,12 @@ class ProviderHealthCheckUnitTest {
             "cerebras" to "CEREBRAS_API_KEY",
             "xai" to "XAI_API_KEY",
             "cohere" to "COHERE_API_KEY",
+            "zai" to "ZAI_API_KEY",
+            "github-models" to "GITHUB_MODELS_API_KEY",
+            "nvidia-nim" to "NVIDIA_NIM_API_KEY",
+            "ovhcloud-ai-endpoints" to "OVHCLOUD_AI_ENDPOINTS_API_KEY",
+            "llm7" to "LLM7_API_KEY",
+            "siliconflow" to "SILICONFLOW_API_KEY",
         ).forEach { (name, envVar) ->
             val expected = if (System.getenv(envVar).isNullOrBlank()) "per-request only" else "enabled"
             assertEquals(expected, data[name], "provider=$name")

@@ -1,6 +1,7 @@
 package com.adars.aishim.service
 
 import com.adars.aishim.provider.AiProvider
+import com.adars.aishim.provider.OpenAiCompatibleRegistry
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -50,13 +51,6 @@ class ModelListService @Inject constructor(
         private val HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
         private const val TIMEOUT_SECONDS = 15L
 
-        // Known base URLs (mirrors ProviderResolver)
-        private const val GROQ_URL = "https://api.groq.com/openai/v1"
-        private const val OPENROUTER_URL = "https://openrouter.ai/api/v1"
-        private const val MISTRAL_URL = "https://api.mistral.ai/v1"
-        private const val CEREBRAS_URL = "https://api.cerebras.ai/v1"
-        private const val XAI_URL = "https://api.x.ai/v1"
-        private const val COHERE_URL = "https://api.cohere.com/compatibility/v1"
         private const val ANTHROPIC_URL = "https://api.anthropic.com/v1"
         private const val GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta"
     }
@@ -66,15 +60,16 @@ class ModelListService @Inject constructor(
      * [apiKey] from the request overrides the server-configured key.
      */
     fun listModels(provider: AiProvider, apiKey: String?): ModelListResponse {
+        OpenAiCompatibleRegistry.providers[provider]?.let { meta ->
+            return fetchOpenAiCompatible(
+                meta.baseUrl,
+                apiKey ?: envKey(meta.apiKeyEnvVar),
+                provider,
+            )
+        }
         return when (provider) {
             AiProvider.OPENAI -> fetchOpenAiCompatible(openAiBaseUrl, apiKey ?: openAiApiKey, provider)
             AiProvider.DEEPSEEK -> fetchOpenAiCompatible(deepSeekBaseUrl, apiKey ?: deepSeekApiKey, provider)
-            AiProvider.GROQ -> fetchOpenAiCompatible(GROQ_URL, apiKey ?: envKey("GROQ_API_KEY"), provider)
-            AiProvider.OPENROUTER -> fetchOpenAiCompatible(OPENROUTER_URL, apiKey ?: envKey("OPENROUTER_API_KEY"), provider)
-            AiProvider.MISTRAL -> fetchOpenAiCompatible(MISTRAL_URL, apiKey ?: envKey("MISTRAL_API_KEY"), provider)
-            AiProvider.CEREBRAS -> fetchOpenAiCompatible(CEREBRAS_URL, apiKey ?: envKey("CEREBRAS_API_KEY"), provider)
-            AiProvider.XAI -> fetchOpenAiCompatible(XAI_URL, apiKey ?: envKey("XAI_API_KEY"), provider)
-            AiProvider.COHERE -> fetchOpenAiCompatible(COHERE_URL, apiKey ?: envKey("COHERE_API_KEY"), provider)
             AiProvider.ANTHROPIC -> fetchAnthropic(apiKey ?: anthropicApiKey)
             AiProvider.GEMINI -> fetchGemini(apiKey ?: geminiApiKey)
             AiProvider.AZURE_OPENAI -> throw UnsupportedOperationException(
@@ -84,6 +79,7 @@ class ModelListService @Inject constructor(
             AiProvider.OPENAI_COMPATIBLE -> throw IllegalArgumentException(
                 "OPENAI_COMPATIBLE requires a base_url — use the provider-specific endpoint or pass base_url in model_params."
             )
+            else -> throw IllegalStateException("Unhandled provider model-list routing for $provider")
         }
     }
 
