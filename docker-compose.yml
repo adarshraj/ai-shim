@@ -2,12 +2,7 @@ services:
 
   # ── AI Shim (Quarkus) ────────────────────────────────────────────────────────
   ai-shim:
-    # Build locally for now. Once GitHub Actions pushes to GHCR, replace with:
-    #   image: ghcr.io/adarshraj/ai-shim:latest
-    build:
-      context: .
-      dockerfile: src/main/docker/Dockerfile.jvm
-    image: ai-shim:latest
+    image: ghcr.io/adarshraj/ai-shim:latest
     container_name: ai-shim
     restart: unless-stopped
     expose:
