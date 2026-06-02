@@ -2,13 +2,29 @@ services:
 
   # ── AI Shim (Quarkus) ────────────────────────────────────────────────────────
   ai-shim:
+    # Build locally for now. Once GitHub Actions pushes to GHCR, replace with:
+    #   image: ghcr.io/adarshraj/ai-shim:latest
     build:
       context: .
       dockerfile: src/main/docker/Dockerfile.jvm
     image: ai-shim:latest
+    container_name: ai-shim
     restart: unless-stopped
-    ports:
-      - "${AI_SHIM_PORT:-8090}:8090"
+    expose:
+      - "8090"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 1g
+    cpus: 1.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ai-shim.rule=Host(`aishim.homelab.local`)"
+      - "traefik.http.routers.ai-shim.entrypoints=websecure"
+      - "traefik.http.routers.ai-shim.tls=true"
+      - "traefik.http.services.ai-shim.loadbalancer.server.port=8090"
+      - "traefik.http.routers.ai-shim.middlewares=ratelimit@docker,secure-headers@docker"
     environment:
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://localhost:8703}
       # AI provider keys — set only the ones you use; unset keys default to DISABLED
@@ -51,7 +67,7 @@ services:
       AI_SHIM_RATE_LIMIT_RPM: ${AI_SHIM_RATE_LIMIT_RPM:-30}
       AI_SHIM_RATE_LIMIT_RPD: ${AI_SHIM_RATE_LIMIT_RPD:-1000}
     networks:
-      - ai-shim-network
+      - platform_proxy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8090/q/health/ready"]
       interval: 10s
@@ -60,8 +76,5 @@ services:
       start_period: 30s
 
 networks:
-  # Shared external network — calling apps join this to reach ai-shim
-  # Create it once with: docker network create ai-shim-network
-  ai-shim-network:
+  platform_proxy:
     external: true
-    name: ai-shim-network
