@@ -15,7 +15,7 @@ services:
     cpus: 1.0
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ai-shim.rule=Host(`aishim.homelab.local`)"
+      - "traefik.http.routers.ai-shim.rule=Host(`${AI_SHIM_HOST:-aishim.homelab.local}`)"
       - "traefik.http.routers.ai-shim.entrypoints=websecure"
       - "traefik.http.routers.ai-shim.tls=true"
       - "traefik.http.services.ai-shim.loadbalancer.server.port=8090"
