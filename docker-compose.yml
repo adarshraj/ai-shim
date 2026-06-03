@@ -21,6 +21,7 @@ services:
       - "traefik.http.services.ai-shim.loadbalancer.server.port=8090"
       - "traefik.http.routers.ai-shim.middlewares=ratelimit@docker,secure-headers@docker"
     environment:
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://localhost:8703}
       # AI provider keys — set only the ones you use; unset keys default to DISABLED
       OPENAI_API_KEY: ${OPENAI_API_KEY:-DISABLED}
