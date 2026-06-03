@@ -64,7 +64,7 @@ services:
     networks:
       - platform_proxy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8090/q/health/ready"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8090/q/health/live"]
       interval: 10s
       timeout: 5s
       retries: 5
