@@ -9,14 +9,11 @@ jobs:
     uses: adarshraj/platform/.github/workflows/quarkus-build.yml@main
     with:
       image-name: ai-shim
-    secrets:
-      INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
-      INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+    secrets: inherit
 
   deploy:
     needs: build
     uses: adarshraj/platform/.github/workflows/deploy-portainer.yml@main
     with:
       stack-name: ai-shim
-    secrets:
-      PORTAINER_WEBHOOK_URL: ${{ secrets.PORTAINER_WEBHOOK_URL_AI_SHIM }}
+    secrets: inherit
