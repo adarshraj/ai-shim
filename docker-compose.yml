@@ -19,7 +19,7 @@ services:
       - "traefik.http.routers.ai-shim.entrypoints=websecure"
       - "traefik.http.routers.ai-shim.tls=true"
       - "traefik.http.services.ai-shim.loadbalancer.server.port=8090"
-      - "traefik.http.routers.ai-shim.middlewares=ratelimit@docker,secure-headers@docker"
+      - "traefik.http.routers.ai-shim.middlewares=secure-headers@file"
     environment:
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://localhost:8703}
